@@ -3,10 +3,13 @@ import random
 class knapsack:
 
     def back(self):
-        print("Podaj dane do plecakow (po spacjach): ")
-        waga = list(map(int, input("Wagi:    ").split()))
-        wartosc = list(map(int, input("Wartosci:").split()))
-        pojemnosc = int(input("Pojemnosc:"))
+        waga = [5,3,2,4,3]
+        wartosc = [3,4,2,6,1]
+        pojemnosc = 12
+        # print("Podaj dane do plecakow (po spacjach): ")
+        # waga = list(map(int, input("Wagi     : ").split()))
+        # wartosc = list(map(int, input("Wartosci : ").split()))
+        # pojemnosc = int(input("Pojemnosc: "))
         l_kontenerow = len(waga)
         print("Algorytm zachlanny: ")
         self.greedy([waga, wartosc], pojemnosc)
@@ -14,6 +17,11 @@ class knapsack:
         self.dynamic(pojemnosc, waga, wartosc)
         print("Algorytm dynamiczny 2.: ")
         self.dynamic2(pojemnosc, waga, wartosc)
+
+    def printNice(self, digit, space):
+      if digit < 10: print(f"  {digit}{space}", end = "", sep = "")
+      elif digit < 100: print(f" {digit}{space}", end = "", sep = "")
+      elif digit < 1000: print(f"{digit}{space}", end = "", sep = "")
 
     def greedy(self, data, backpackmax):
         result = 0
@@ -51,11 +59,14 @@ class knapsack:
                 else:
                     K[i][w] = K[i - 1][w]
 
+        print("    ", end="", sep="")
+        for i in range(W + 1): self.printNice(i, " ")
+        print()
         for i in range(n + 1):
            for j in range(W + 1):
-              if K[i][j] < 10: print(f"  {K[i][j]} ", end = "", sep = "")
-              elif K[i][j] < 100: print(f" {K[i][j]} ", end = "", sep = "")
-              elif K[i][j] < 1000: print(f"{K[i][j]} ", end = "", sep = "")
+               if j == 0:
+                   self.printNice(i, " ")
+               self.printNice(K[i][j], " ")
            print()
         print()
         # stores the result of Knapsack
@@ -66,20 +77,12 @@ class knapsack:
         for i in range(n, 0, -1):
             if res <= 0:
                 break
-            # either the result comes from the
-            # top (K[i-1][w]) or from (val[i-1]
-            # + K[i-1] [w-wt[i-1]]) as in Knapsack
-            # table. If it comes from the latter
-            # one/ it means the item is included.
             if res == K[i - 1][w]:
                 continue
             else:
 
                 # This item is included.
                 print(f"{wt[i - 1]}[{val[i - 1]}] ", sep="", end="")
-
-                # Since this weight is included
-                # its value is deducted
                 res = res - val[i - 1]
                 w = w - wt[i - 1]
         print()
@@ -90,27 +93,28 @@ class knapsack:
         K = [[0 for w in range(maxvalue + 1)]
                 for i in range(n + 1)]
 
-        # Build table K[][] in bottom
-        # up manner
         for i in range(n + 1):
             for w in range(maxvalue + 1):
-                if (i == 0 and w == 0) or w == 0:
+                if w == 0:
                     K[i][w] = 0
-                elif i == 0:# or w == 0:
+                elif i == 0 and w != 0:# or w == 0:
                     K[i][w] = 100
                 elif val[i - 1] <= w:
                     K[i][w] = min(wt[i - 1] + K[i - 1][w - val[i - 1]], K[i - 1][w])
                 else:
                     K[i][w] = K[i - 1][w]
 
+        print("    ", end="", sep="")
+        for i in range(maxvalue + 1): self.printNice(i, " ")
+        print()
         for i in range(n + 1):
-           for j in range(W + 1):
-               if K[i][j] < 10: print(f"  {K[i][j]} ", end = "", sep = "")
-               elif K[i][j] < 100: print(f" {K[i][j]} ", end = "", sep = "")
-               elif K[i][j] < 1000: print(f"{K[i][j]} ", end = "", sep = "")
+           for j in range(maxvalue + 1):
+               if j == 0:
+                   self.printNice(i, " ")
+               self.printNice(K[i][j]," ")
            print()
         print()
-        # stores the result of Knapsack
+
         res = K[n][W]
         print("Result", res)
         print()
@@ -118,20 +122,10 @@ class knapsack:
         for i in range(n, 0, -1):
             if res <= 0:
                 break
-            # either the result comes from the
-            # top (K[i-1][w]) or from (val[i-1]
-            # + K[i-1] [w-wt[i-1]]) as in Knapsack
-            # table. If it comes from the latter
-            # one/ it means the item is included.
             if res == K[i - 1][w]:
                 continue
             else:
-
-                # This item is included.
                 print(f"{wt[i - 1]}[{val[i - 1]}] ", sep="", end="")
-
-                # Since this weight is included
-                # its value is deducted
                 res = res - val[i - 1]
                 w = w - wt[i - 1]
         print()
